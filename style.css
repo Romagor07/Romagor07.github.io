@@ -1,0 +1,481 @@
+/* =====================================================================
+   NOVE Project - Loading Screen
+   Внешних файлов не требует: фон и логотип рисуются CSS/SVG.
+   ===================================================================== */
+
+:root{
+    --accent:#00BFFF;
+    --accent2:#7FE9FF;
+    --panel:rgba(255,255,255,.07);
+    --panel-solid:rgba(14,20,28,.82);
+    --border:rgba(255,255,255,.14);
+}
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:"Segoe UI",Roboto,Arial,sans-serif;
+}
+
+html,body{
+    width:100%;
+    height:100%;
+    overflow:hidden;
+    color:#fff;
+}
+
+/* Базовый цвет задаётся ТОЛЬКО на html.
+   Если повесить непрозрачный фон ещё и на body, он перекроет #background,
+   #backgroundImage и #overlay — они лежат на отрицательном z-index, а такие
+   слои рисуются под фоном блочных предков. Именно из-за этого фон не был виден. */
+html{
+    background:#05080d;
+}
+
+[hidden]{ display:none !important; }
+
+
+/* ------------------------------ Фон ------------------------------ */
+
+#background{
+    position:fixed;
+    inset:0;
+    z-index:-3;
+    background:
+        radial-gradient(120% 90% at 50% 0%,rgba(0,0,0,0) 0%,rgba(0,0,0,.75) 100%),
+        radial-gradient(80% 70% at 15% 85%,color-mix(in srgb,var(--accent) 22%,transparent) 0%,rgba(0,0,0,0) 60%),
+        radial-gradient(70% 60% at 85% 20%,color-mix(in srgb,var(--accent2) 16%,transparent) 0%,rgba(0,0,0,0) 60%),
+        linear-gradient(160deg,#0a1420 0%,#05080d 55%,#080d16 100%);
+}
+
+/* Тонкая «сетка тоннеля», медленно уезжает — фон живой без картинки */
+#background::after{
+    content:"";
+    position:absolute;
+    inset:-20%;
+    background-image:
+        linear-gradient(rgba(255,255,255,.05) 1px,transparent 1px),
+        linear-gradient(90deg,rgba(255,255,255,.05) 1px,transparent 1px);
+    background-size:64px 64px;
+    mask-image:radial-gradient(70% 60% at 50% 45%,#000 0%,transparent 75%);
+    -webkit-mask-image:radial-gradient(70% 60% at 50% 45%,#000 0%,transparent 75%);
+    animation:gridDrift 40s linear infinite;
+    opacity:.6;
+}
+
+@keyframes gridDrift{
+    from{ transform:translate3d(0,0,0); }
+    to{   transform:translate3d(64px,64px,0); }
+}
+
+/* Слой для пользовательской картинки: появляется только если она загрузилась */
+#backgroundImage{
+    position:fixed;
+    inset:0;
+    z-index:-2;
+    background-position:center center;
+    background-size:cover;
+    background-repeat:no-repeat;
+    opacity:0;
+    transition:opacity .8s ease;
+}
+
+#backgroundImage.visible{ opacity:1; }
+
+/* Приближение включается только по настройке: на арте с вписанным логотипом
+   зум подрезал бы его края. */
+#backgroundImage.zoom{
+    animation:zoomBackground 35s ease-in-out infinite alternate;
+}
+
+@keyframes zoomBackground{
+    from{ transform:scale(1); }
+    to{   transform:scale(1.06); }
+}
+
+#overlay{
+    position:fixed;
+    inset:0;
+    z-index:-1;
+    background:linear-gradient(180deg,rgba(0,0,0,.35) 0%,rgba(0,0,0,.55) 60%,rgba(0,0,0,.78) 100%);
+}
+
+/* Когда загрузился арт — верх почти не трогаем (там логотип и поезда),
+   а внизу даём плотную подложку, чтобы текст читался поверх рельсов. */
+body.hasBackground #overlay{
+    background:linear-gradient(180deg,
+        rgba(0,0,0,.10) 0%,
+        rgba(0,0,0,.16) 38%,
+        rgba(0,0,0,.55) 70%,
+        rgba(0,0,0,.88) 100%);
+}
+
+
+/* ---------------------------- Центр ---------------------------- */
+
+#content{
+    position:absolute;
+    top:44%;
+    left:50%;
+    transform:translate(-50%,-50%);
+    text-align:center;
+    width:min(92vw,900px);
+}
+
+#logoWrap{
+    display:flex;
+    justify-content:center;
+    margin-bottom:22px;
+}
+
+#logoMark,#logoImage{
+    width:clamp(110px,11vw,164px);
+    height:auto;
+    filter:drop-shadow(0 0 28px color-mix(in srgb,var(--accent) 55%,transparent));
+    animation:logoFloat 6s ease-in-out infinite;
+}
+
+@keyframes logoFloat{
+    0%,100%{ transform:translateY(0); }
+    50%{     transform:translateY(-7px); }
+}
+
+/* Встроенный SVG-логотип */
+.gradStop1{ stop-color:var(--accent2); }
+.gradStop2{ stop-color:var(--accent); }
+
+#logoMark .ring{
+    fill:none;
+    stroke:url(#logoGrad);
+    stroke-width:3.5;
+    opacity:.9;
+}
+
+#logoMark .disc{
+    fill:rgba(3,10,18,.55);
+}
+
+#logoMark .letter{
+    fill:none;
+    stroke:url(#logoGrad);
+    stroke-width:9;
+    stroke-linecap:round;
+    stroke-linejoin:round;
+}
+
+#logoMark .rail{
+    stroke:var(--accent);
+    stroke-width:3.5;
+    stroke-linecap:round;
+    opacity:.5;
+}
+
+h1{
+    font-size:clamp(30px,4.4vw,56px);
+    letter-spacing:clamp(4px,.8vw,10px);
+    font-weight:700;
+    text-shadow:0 0 26px color-mix(in srgb,var(--accent) 65%,transparent);
+}
+
+#subtitle{
+    margin-top:14px;
+    font-size:clamp(15px,1.4vw,20px);
+    opacity:.85;
+}
+
+#serverMeta{
+    margin-top:18px;
+    display:flex;
+    justify-content:center;
+    flex-wrap:wrap;
+    gap:10px;
+}
+
+.metaItem{
+    padding:6px 14px;
+    border-radius:999px;
+    font-size:13px;
+    letter-spacing:.4px;
+    background:rgba(0,0,0,.35);
+    border:1px solid var(--border);
+    backdrop-filter:blur(10px);
+    -webkit-backdrop-filter:blur(10px);
+    opacity:.9;
+}
+
+/* --- Логотип и название вписаны прямо в фон --- */
+/* Свой логотип и заголовок не рисуем, а плашки с картой/режимом/слотами
+   опускаем к панели загрузки, чтобы они не легли на поезда. */
+
+body.noBranding #logoWrap,
+body.noBranding #logoImage,
+body.noBranding #logoMark,
+body.noBranding h1,
+body.noBranding #subtitle{
+    display:none;
+}
+
+body.noBranding #content{
+    top:auto;
+    bottom:232px;
+    transform:translateX(-50%);
+    margin:0;
+}
+
+body.noBranding #serverMeta{
+    margin-top:0;
+}
+
+
+/* ------------------------ Панель загрузки ------------------------ */
+
+#loadingPanel{
+    position:absolute;
+    left:50%;
+    bottom:92px;
+    transform:translateX(-50%);
+    width:min(900px,92vw);
+    padding:20px 24px;
+    border-radius:20px;
+    background:var(--panel);
+    border:1px solid var(--border);
+    backdrop-filter:blur(18px);
+    -webkit-backdrop-filter:blur(18px);
+    box-shadow:0 20px 60px rgba(0,0,0,.45);
+}
+
+#statusRow,#detailRow{
+    display:flex;
+    align-items:baseline;
+    justify-content:space-between;
+    gap:16px;
+}
+
+#status{
+    font-size:clamp(15px,1.3vw,18px);
+    font-weight:500;
+}
+
+#percent{
+    font-size:clamp(15px,1.3vw,18px);
+    font-variant-numeric:tabular-nums;
+    color:var(--accent2);
+    min-width:60px;
+    text-align:right;
+}
+
+#bar{
+    position:relative;
+    margin:12px 0 10px;
+    width:100%;
+    height:14px;
+    background:rgba(255,255,255,.12);
+    border-radius:999px;
+    overflow:hidden;
+}
+
+#progress{
+    width:0%;
+    height:100%;
+    position:relative;
+    overflow:hidden;
+    border-radius:999px;
+    background:linear-gradient(90deg,var(--accent),var(--accent2));
+    box-shadow:0 0 18px color-mix(in srgb,var(--accent) 60%,transparent);
+}
+
+/* Блик бежит по заполненной части */
+#shine{
+    position:absolute;
+    top:0;
+    left:-90px;
+    width:90px;
+    height:100%;
+    background:linear-gradient(90deg,transparent,rgba(255,255,255,.7),transparent);
+    animation:shine 1.8s linear infinite;
+}
+
+@keyframes shine{
+    from{ left:-90px; }
+    to{   left:100%; }
+}
+
+/* Фаза "подключение": процента ещё нет, честно показываем бегущую полоску */
+#bar.indeterminate #progress{
+    width:100% !important;
+    background:none;
+    box-shadow:none;
+}
+
+#bar.indeterminate #shine{
+    width:35%;
+    background:linear-gradient(90deg,transparent,var(--accent),var(--accent2),transparent);
+    animation:indeterminate 1.5s ease-in-out infinite;
+}
+
+@keyframes indeterminate{
+    from{ left:-35%; }
+    to{   left:100%; }
+}
+
+/* Фаза "финализация": файлы скачаны, ждём карту — полоса полная и дышит */
+#bar.finalizing #progress{
+    animation:pulse 1.6s ease-in-out infinite;
+}
+
+@keyframes pulse{
+    0%,100%{ opacity:1; }
+    50%{     opacity:.55; }
+}
+
+#detailRow{
+    justify-content:flex-end;
+    font-size:13px;
+    opacity:.65;
+    min-height:18px;
+}
+
+#fileCount{
+    font-variant-numeric:tabular-nums;
+    white-space:nowrap;
+}
+
+
+/* ---------------------------- Новости ---------------------------- */
+
+#news{
+    position:absolute;
+    left:45px;
+    /* Держим запас над плашками и панелью загрузки: на низких экранах
+       блок поднимается, иначе он налезал на прогресс-бар. */
+    bottom:270px;
+    width:min(360px,30vw);
+    padding:20px;
+    border-radius:18px;
+    background:var(--panel);
+    border:1px solid var(--border);
+    backdrop-filter:blur(18px);
+    -webkit-backdrop-filter:blur(18px);
+}
+
+#news .title{
+    font-size:20px;
+    margin-bottom:14px;
+    color:var(--accent2);
+}
+
+#news ul{ list-style:none; }
+
+#news li{
+    position:relative;
+    margin-bottom:10px;
+    padding-left:14px;
+    font-size:14px;
+    line-height:1.5;
+    opacity:.9;
+}
+
+#news li::before{
+    content:"";
+    position:absolute;
+    left:0;
+    top:.62em;
+    width:5px;
+    height:5px;
+    border-radius:50%;
+    background:var(--accent);
+}
+
+#news li:last-child{ margin-bottom:0; }
+
+
+/* ----------------------------- Низ ----------------------------- */
+
+#footer{
+    position:absolute;
+    left:45px;
+    right:45px;
+    bottom:24px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:24px;
+    font-size:14px;
+    opacity:.9;
+}
+
+#version{ line-height:1.5; white-space:nowrap; }
+#version strong{ color:var(--accent2); font-weight:600; }
+#footerVersion{ opacity:.65; font-size:13px; }
+
+#tip{
+    flex:1;
+    text-align:center;
+    opacity:.8;
+}
+
+#tip.fadeIn{ animation:fadeIn .5s ease; }
+
+@keyframes fadeIn{
+    from{ opacity:0; transform:translateY(6px); }
+    to{   opacity:.8; transform:translateY(0); }
+}
+
+#links{
+    display:flex;
+    gap:10px;
+    white-space:nowrap;
+}
+
+.linkBtn{
+    padding:7px 16px;
+    border-radius:999px;
+    font-size:13px;
+    text-decoration:none;
+    color:#fff;
+    background:rgba(255,255,255,.08);
+    border:1px solid var(--border);
+    transition:background .2s ease,border-color .2s ease;
+}
+
+.linkBtn:hover{
+    background:color-mix(in srgb,var(--accent) 28%,transparent);
+    border-color:var(--accent);
+}
+
+
+/* ------------------- Запасные варианты / адаптив ------------------- */
+
+/* Если движок старый и не умеет backdrop-filter — панели остаются читаемыми */
+@supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){
+    #loadingPanel,#news{ background:var(--panel-solid); }
+}
+
+/* Если нет color-mix — цвета откатываются к статичным */
+@supports not (color:color-mix(in srgb,red 50%,blue)){
+    #background{ background:linear-gradient(160deg,#0a1420 0%,#05080d 55%,#080d16 100%); }
+    h1{ text-shadow:0 0 26px rgba(0,180,255,.7); }
+    #logoMark,#logoImage{ filter:drop-shadow(0 0 28px rgba(0,180,255,.6)); }
+    #progress{ box-shadow:0 0 18px rgba(0,180,255,.6); }
+    .linkBtn:hover{ background:rgba(0,191,255,.28); }
+}
+
+@media (max-height:900px){
+    #news{ bottom:285px; }
+}
+
+@media (max-height:800px){
+    #content{ top:40%; }
+    #news{ bottom:300px; }
+}
+
+@media (max-width:1200px),(max-height:700px){
+    #news{ display:none; }
+}
+
+@media (max-width:900px){
+    #footer{ left:24px; right:24px; font-size:13px; }
+    #loadingPanel{ bottom:82px; padding:16px 18px; }
+    #tip{ display:none; }
+}
