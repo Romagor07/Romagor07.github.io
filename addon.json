@@ -1,0 +1,14 @@
+{
+    "title": "NOVE Project Loading Screen",
+    "type": "servercontent",
+    "tags": [
+        "roleplay",
+        "metrostroi",
+        "loading"
+    ],
+    "ignore": [
+        ".git/*",
+        "*.psd",
+        "*.zip"
+    ]
+}
