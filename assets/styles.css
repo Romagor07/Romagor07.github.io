@@ -612,3 +612,25 @@ body::after {
   .fx .reveal { opacity: 1; }
 }
 .card, .feat__body { min-width: 0; }
+
+/* окно проекта: подробности */
+.modal { width: min(800px, calc(100vw - 32px)); }
+.m__details + .m__details { margin-top: 10px; }
+.m__credit {
+  margin-top: 16px; padding: 12px 14px; border-radius: var(--r-sm); font-size: 14.5px; color: var(--muted);
+  background: color-mix(in srgb, var(--cat, var(--accent)) 8%, transparent);
+  border: 1px solid color-mix(in srgb, var(--cat, var(--accent)) 25%, transparent);
+}
+.m__credit b { color: var(--text); font-weight: 600; }
+.m__facts {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 1px; margin: 22px 0 0;
+  border: 1px solid var(--line); border-radius: var(--r-sm); background: var(--line); overflow: hidden;
+}
+.m__facts > div { background: var(--surface-2); padding: 12px 14px; }
+.m__facts dt { font: 500 11px/1.2 var(--mono); text-transform: uppercase; letter-spacing: 0.08em; color: var(--faint); }
+.m__facts dd { margin: 6px 0 0; font-size: 14.5px; line-height: 1.35; }
+.m__pre {
+  margin: 14px 0 0; padding: 16px; overflow-x: auto; border-radius: var(--r-sm);
+  background: var(--bg-2); border: 1px solid var(--line);
+  font: 400 12.5px/1.6 var(--mono); color: var(--muted); white-space: pre;
+}
