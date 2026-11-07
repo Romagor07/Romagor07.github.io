@@ -151,9 +151,14 @@
       '<div class="m__meta">' + tag(p) + statusHtml(p) + '</div>' +
       '<h2 class="m__title" id="modalTitle">' + esc(p.title) + '</h2>' +
       '<p class="m__summary">' + esc(p.summary) + '</p>' +
-      (p.details ? '<p class="m__details">' + esc(p.details) + '</p>' : '') +
+      (p.credit ? '<p class="m__credit"><b>Доработка.</b> ' + esc(p.credit) + '</p>' : '') +
+      [].concat(p.about || p.details || []).map(function (t) { return '<p class="m__details">' + esc(t) + '</p>'; }).join('') +
+      (p.facts && p.facts.length ? '<dl class="m__facts">' + p.facts.map(function (f) { return '<div><dt>' + esc(f[0]) + '</dt><dd>' + esc(f[1]) + '</dd></div>'; }).join('') + '</dl>' : '') +
       (p.image ? '<picture><source srcset="' + esc(p.image) + '" type="image/webp"><img class="m__img" src="' + esc(p.imageFallback || p.image) + '" alt="Интерфейс ' + esc(p.title) + '"></picture>' : '') +
-      (p.highlights && p.highlights.length ? '<h3 class="m__h">Что внутри</h3><ul class="m__points">' + p.highlights.map(function (h) { return '<li>' + esc(h) + '</li>'; }).join('') + '</ul>' : '') +
+      (p.diagram ? '<h3 class="m__h">Как это работает</h3><pre class="m__pre">' + esc(p.diagram) + '</pre>' : '') +
+      (p.sections && p.sections.length
+        ? p.sections.map(function (s) { return '<h3 class="m__h">' + esc(s.title) + '</h3><ul class="m__points">' + s.items.map(function (h) { return '<li>' + esc(h) + '</li>'; }).join('') + '</ul>'; }).join('')
+        : (p.highlights && p.highlights.length ? '<h3 class="m__h">Что внутри</h3><ul class="m__points">' + p.highlights.map(function (h) { return '<li>' + esc(h) + '</li>'; }).join('') + '</ul>' : '')) +
       '<h3 class="m__h">Стек</h3><div class="m__chips">' + chips(p.stack) + '</div>' +
       (p.link ? '<div class="m__link"><a class="btn btn--primary" href="' + esc(p.link.href) + '" target="_blank" rel="noopener">' + esc(p.link.label) + ' ' + ARROW + '</a></div>' : '');
     if (typeof modal.showModal === 'function') { if (!modal.open) modal.showModal(); } else { modal.setAttribute('open', ''); }
