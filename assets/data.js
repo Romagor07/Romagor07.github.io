@@ -208,6 +208,24 @@ window.PROJECTS = [
     snippet: '[Discord] → !cmd kick … ✓',
   },
   {
+    id: 'gss',
+    title: 'GSS Monitor (V1–V4)',
+    category: 'bots',
+    status: 'готово',
+    icon: 'bot',
+    summary: 'Discord-бот мониторинга игровых серверов: онлайн в голосовых каналах и карточки статуса с игроками и картой.',
+    details:
+      'Четыре поколения одного бота: от простого вывода статуса GMod-серверов до универсального монитора Garry’s Mod, SCP: Secret Laboratory и Minecraft. Бот сам создаёт категорию с каналами и обновляет сообщения без дублей.',
+    highlights: [
+      'Сам создаёт категорию «Мониторинг», голосовые каналы-счётчики и канал статуса',
+      'Embed-карточки: онлайн, список игроков, текущая карта с превью',
+      'Кнопка «Подключиться» прямо из Discord',
+      'V4 — Garry’s Mod, SCP:SL и Minecraft, ретраи и тайм-ауты запросов',
+    ],
+    stack: ['Node.js', 'discord.js', 'GameDig', 'axios'],
+    snippet: 'Metrostroi #1 · 🟢 24/32 · gm_metro_crossline',
+  },
+  {
     id: 'neurokino',
     title: 'NEUROKINO',
     category: 'web',

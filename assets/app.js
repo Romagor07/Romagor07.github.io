@@ -212,7 +212,69 @@
 
   /* ---------- nav border on scroll ---------- */
   var nav = document.querySelector('.nav');
-  var onScroll = function () { nav.classList.toggle('is-scrolled', window.scrollY > 8); };
+  var progress = document.querySelector('.progress');
+  var onScroll = function () {
+    nav.classList.toggle('is-scrolled', window.scrollY > 8);
+    var max = document.documentElement.scrollHeight - window.innerHeight;
+    if (progress) progress.style.setProperty('--p', max > 0 ? Math.min(1, window.scrollY / max) : 0);
+  };
   window.addEventListener('scroll', onScroll, { passive: true });
   onScroll();
+
+  /* ---------- FX ---------- */
+  var reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  // бегущая строка из стека всех проектов
+  var mq = document.getElementById('marquee');
+  if (mq) {
+    var names = Object.keys(tech);
+    var line = names.map(function (n) { return '<span>' + esc(n) + '</span>'; }).join('');
+    mq.innerHTML = line + line;
+  }
+
+  // подсветка карточек за курсором
+  var glowSel = '.card, .feat, .area, .skill-group';
+  document.querySelectorAll('.area, .skill-group').forEach(function (el) { el.classList.add('glow'); });
+  function markGlow() { document.querySelectorAll('.card, .feat').forEach(function (el) { el.classList.add('glow'); }); }
+  markGlow();
+  filtersEl.addEventListener('click', function () { setTimeout(markGlow, 0); });
+  document.addEventListener('pointermove', function (e) {
+    var el = e.target.closest && e.target.closest(glowSel);
+    if (!el) return;
+    var r = el.getBoundingClientRect();
+    el.style.setProperty('--mx', (e.clientX - r.left) + 'px');
+    el.style.setProperty('--my', (e.clientY - r.top) + 'px');
+  }, { passive: true });
+
+  // счётчики в статистике
+  function countUp(el) {
+    var raw = el.textContent, n = parseInt(raw, 10), suffix = raw.replace(/^\d+/, '');
+    if (!n || reduce) return;
+    var t0 = performance.now(), dur = 1100;
+    (function tick(t) {
+      var k = Math.min(1, (t - t0) / dur), e = 1 - Math.pow(1 - k, 3);
+      el.textContent = Math.round(n * e) + suffix;
+      if (k < 1) requestAnimationFrame(tick);
+    })(t0);
+  }
+  setTimeout(function () { document.querySelectorAll('[data-stat]').forEach(countUp); }, 350);
+
+  // появление блоков при прокрутке
+  if ('IntersectionObserver' in window && !reduce) {
+    root.classList.add('fx');
+    var targets = document.querySelectorAll('.section__head, .feat, .area, .skill-group, .contact__card');
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (en) {
+        if (!en.isIntersecting) return;
+        en.target.classList.add('is-in');
+        io.unobserve(en.target);
+      });
+    }, { rootMargin: '0px 0px -8% 0px', threshold: 0.08 });
+    targets.forEach(function (el) {
+      var sib = el.parentElement ? Array.prototype.indexOf.call(el.parentElement.children, el) : 0;
+      if (/area|skill-group/.test(el.className)) el.style.setProperty('--d', (sib * 90) + 'ms');
+      el.classList.add('reveal');
+      io.observe(el);
+    });
+  }
 })();

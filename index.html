@@ -37,11 +37,13 @@
         <svg class="i-moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 14.5A8 8 0 0 1 9.5 4 8 8 0 1 0 20 14.5Z"/></svg>
       </button>
     </div>
+    <div class="progress" aria-hidden="true"></div>
   </header>
 
   <main>
     <!-- HERO -->
     <section class="hero wrap">
+      <div class="hero__fx" aria-hidden="true"><span class="orb orb--1"></span><span class="orb orb--2"></span><span class="orb orb--3"></span></div>
       <p class="eyebrow">
         <span class="pulse" data-available aria-hidden="true"></span>
         <span data-bind="role">Full-stack разработчик</span>
@@ -66,6 +68,8 @@
         <div><dt>Платформы</dt><dd class="stats__small">Web · Windows · Linux · Android</dd></div>
       </dl>
     </section>
+
+    <div class="marquee" aria-hidden="true"><div class="marquee__track" id="marquee"></div></div>
 
     <!-- AREAS -->
     <section class="wrap areas" aria-label="Чем занимаюсь">
