@@ -1,0 +1,13 @@
+# Вариант без Docker: Caddy сам выпустит HTTPS-сертификат.
+# Замените домен и путь, положите в /etc/caddy/Caddyfile и выполните: sudo systemctl reload caddy
+
+portfolio.example.com {
+	root * /var/www/portfolio
+	encode gzip
+	file_server
+
+	@hidden path /deploy/* /Dockerfile /docker-compose.yml /README.md
+	respond @hidden 404
+
+	header /assets/* Cache-Control "public, max-age=604800"
+}
