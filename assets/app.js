@@ -224,14 +224,6 @@
   /* ---------- FX ---------- */
   var reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  // бегущая строка из стека всех проектов
-  var mq = document.getElementById('marquee');
-  if (mq) {
-    var names = Object.keys(tech);
-    var line = names.map(function (n) { return '<span>' + esc(n) + '</span>'; }).join('');
-    mq.innerHTML = line + line;
-  }
-
   // подсветка карточек за курсором
   var glowSel = '.card, .feat, .area, .skill-group';
   document.querySelectorAll('.area, .skill-group').forEach(function (el) { el.classList.add('glow'); });

@@ -569,20 +569,6 @@ body::after {
 .btn--primary:hover::after { left: 130%; }
 .btn--primary:hover { box-shadow: 0 14px 38px -10px var(--accent); }
 
-/* бегущая строка стека */
-.marquee {
-  margin-top: clamp(8px, 2vw, 16px); margin-bottom: clamp(40px, 6vw, 64px);
-  border-block: 1px solid var(--line); overflow: hidden; padding: 16px 0;
-  mask-image: linear-gradient(90deg, transparent, #000 10%, #000 90%, transparent);
-  -webkit-mask-image: linear-gradient(90deg, transparent, #000 10%, #000 90%, transparent);
-}
-.marquee__track { display: flex; width: max-content; animation: marquee 48s linear infinite; }
-.marquee:hover .marquee__track { animation-play-state: paused; }
-.marquee__track span { display: inline-flex; align-items: center; gap: 22px; padding-right: 22px; font: 600 clamp(18px, 2.4vw, 26px)/1 var(--display); letter-spacing: -0.02em; color: var(--faint); white-space: nowrap; transition: color 0.2s; }
-.marquee__track span:hover { color: var(--text); }
-.marquee__track span::after { content: '✦'; font-size: 0.6em; color: var(--accent); }
-@keyframes marquee { to { transform: translateX(-50%); } }
-
 /* подсветка за курсором */
 .area, .skill-group { position: relative; }
 .glow::before {
@@ -624,6 +610,5 @@ body::after {
 }
 @media (prefers-reduced-motion: reduce) {
   .fx .reveal { opacity: 1; }
-  .marquee__track { transform: none; }
 }
 .card, .feat__body { min-width: 0; }
