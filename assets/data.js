@@ -46,7 +46,7 @@ window.PROJECTS = [
     imageFallback: 'assets/img/gsp-dashboard.png',
     title: 'GameServerPanel',
     category: 'web',
-    status: 'в разработке',
+    status: 'стадия тестов',
     summary:
       'Универсальная self-hosted панель для игровых серверов: центральная веб-панель и лёгкий агент на каждой машине.',
     about: [
